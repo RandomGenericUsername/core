@@ -57,7 +57,20 @@ class DnfPackageManager(RedHatPackageManagerBase):
         try:
             result = self._run_command(command, check=False)
 
-            if result.returncode == 0:
+            # Combine stdout and stderr for parsing - dnf may output
+            # errors to either stream
+            combined_output = (result.stdout or "") + (result.stderr or "")
+
+            # Always check for failed packages, even on returncode 0
+            # dnf may succeed installing some packages while others fail
+            failed_packages = self._parse_failed_packages(
+                combined_output, packages
+            )
+            successful_packages = [
+                pkg for pkg in packages if pkg not in failed_packages
+            ]
+
+            if result.returncode == 0 and not failed_packages:
                 return InstallResult(
                     success=True,
                     packages_installed=packages.copy(),
@@ -65,20 +78,12 @@ class DnfPackageManager(RedHatPackageManagerBase):
                     output=result.stdout,
                 )
             else:
-                # Parse output to determine which packages failed
-                failed_packages = self._parse_failed_packages(
-                    result.stderr, packages
-                )
-                successful_packages = [
-                    pkg for pkg in packages if pkg not in failed_packages
-                ]
-
                 return InstallResult(
                     success=len(successful_packages) > 0,
                     packages_installed=successful_packages,
                     packages_failed=failed_packages,
                     output=result.stdout,
-                    error_message=result.stderr,
+                    error_message=result.stderr or combined_output,
                 )
 
         except PackageManagerError as e:
@@ -108,7 +113,18 @@ class DnfPackageManager(RedHatPackageManagerBase):
         try:
             result = self._run_command(command, check=False)
 
-            if result.returncode == 0:
+            # Combine stdout and stderr for parsing
+            combined_output = (result.stdout or "") + (result.stderr or "")
+
+            # Always check for failed packages
+            failed_packages = self._parse_failed_packages(
+                combined_output, packages
+            )
+            successful_packages = [
+                pkg for pkg in packages if pkg not in failed_packages
+            ]
+
+            if result.returncode == 0 and not failed_packages:
                 return InstallResult(
                     success=True,
                     packages_installed=packages.copy(),
@@ -116,19 +132,12 @@ class DnfPackageManager(RedHatPackageManagerBase):
                     output=result.stdout,
                 )
             else:
-                failed_packages = self._parse_failed_packages(
-                    result.stderr, packages
-                )
-                successful_packages = [
-                    pkg for pkg in packages if pkg not in failed_packages
-                ]
-
                 return InstallResult(
                     success=len(successful_packages) > 0,
                     packages_installed=successful_packages,
                     packages_failed=failed_packages,
                     output=result.stdout,
-                    error_message=result.stderr,
+                    error_message=result.stderr or combined_output,
                 )
 
         except PackageManagerError as e:
