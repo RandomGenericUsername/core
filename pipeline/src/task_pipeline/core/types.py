@@ -1,10 +1,12 @@
 """Core pipeline types and configuration classes."""
 
+from __future__ import annotations
+
 import threading
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
+from typing import Any, Union
 
 from rich_logging.rich.rich_logger import RichLogger
 
@@ -132,6 +134,10 @@ class ParallelConfig:
     operator: LogicOperator = LogicOperator.AND
     max_workers: int | None = None
     timeout: float | None = None
+    show_task_identifiers: bool = True
+    """Whether to show task identifiers in parallel execution."""
+    use_visual_separators: bool = False
+    """Whether to log visual separators for parallel tasks."""
 
 
 @dataclass
@@ -143,7 +149,7 @@ class PipelineConfig:
 
 
 # Type alias for pipeline steps
-TaskStep = PipelineStep | list[PipelineStep]
+TaskStep = Union[PipelineStep, list[PipelineStep]]
 
 
 class ProgressTracker:

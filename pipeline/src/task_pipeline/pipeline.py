@@ -1,5 +1,7 @@
 """Main pipeline interface following the Log class pattern."""
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import Any
 

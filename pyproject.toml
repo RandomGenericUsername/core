@@ -1,5 +1,5 @@
 [tool.uv.workspace]
-members = ["logging", "pipeline"]
+members = ["logging", "pipeline", "package-manager"]
 
 [tool.uv]
 dev-dependencies = [

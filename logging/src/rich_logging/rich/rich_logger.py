@@ -6,6 +6,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from typing import Any
 
+from ..core.log_context import LogContext
 from .rich_console_manager import console_manager
 from .rich_feature_settings import RichFeatureSettings
 
@@ -100,6 +101,67 @@ class RichLogger:
         if not RICH_AVAILABLE or not self._rich_settings.enabled:
             return None
         return console_manager.get_console(self._name)
+
+    # Task context methods for parallel execution
+    def set_task_context(
+        self,
+        step_id: str,
+        task_name: str | None = None,
+        **extra_context: Any
+    ) -> None:
+        """Set the task context for the current thread.
+
+        This is useful for parallel execution where multiple tasks run
+        concurrently and need to be identified in the logs.
+
+        Args:
+            step_id: The unique identifier for the current step/task
+            task_name: Optional human-readable task name
+            **extra_context: Additional context data to store
+
+        Example:
+            logger.set_task_context("install_nodejs", "Node.js Installation")
+            logger.info("Installing package...")
+            # Output: [install_nodejs] Installing package...
+        """
+        LogContext.set_task_context(step_id, task_name, **extra_context)
+
+    def clear_task_context(self) -> None:
+        """Clear the task context for the current thread.
+
+        Should be called after parallel task execution completes to avoid
+        context leaking to other operations.
+        """
+        LogContext.clear_task_context()
+
+    @contextmanager
+    def task_context(
+        self,
+        step_id: str,
+        task_name: str | None = None,
+        **extra_context: Any
+    ) -> Iterator[None]:
+        """Context manager for task context.
+
+        Automatically sets and clears task context, ensuring cleanup
+        even if an exception occurs.
+
+        Args:
+            step_id: The unique identifier for the current step/task
+            task_name: Optional human-readable task name
+            **extra_context: Additional context data to store
+
+        Example:
+            with logger.task_context("install_nodejs", "Node.js"):
+                logger.info("Installing package...")
+                # Output: [install_nodejs] Installing package...
+            # Context automatically cleared after the block
+        """
+        try:
+            self.set_task_context(step_id, task_name, **extra_context)
+            yield
+        finally:
+            self.clear_task_context()
 
     def table(
         self,

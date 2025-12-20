@@ -1,5 +1,7 @@
 """Parallel task executor using ThreadPoolExecutor."""
 
+from __future__ import annotations
+
 import copy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -25,6 +27,37 @@ class ParallelTaskExecutor:
             task_executor: Task executor for individual steps (optional)
         """
         self.task_executor = task_executor or TaskExecutor()
+
+    def _execute_with_context(
+        self,
+        step: PipelineStep,
+        step_context: PipelineContext,
+    ) -> PipelineContext:
+        """Execute a step with task context set.
+
+        Args:
+            step: The pipeline step to execute
+            step_context: The context for this step
+
+        Returns:
+            PipelineContext: The result context from step execution
+        """
+        # Set task context for this thread
+        logger = step_context.logger_instance
+        if hasattr(logger, "set_task_context"):
+            logger.set_task_context(
+                step_id=step.step_id,
+                task_name=step.description or step.step_id,
+            )
+
+        try:
+            # Execute the step
+            result = self.task_executor.execute(step, step_context)
+            return result
+        finally:
+            # Always clear task context after execution
+            if hasattr(logger, "clear_task_context"):
+                logger.clear_task_context()
 
     def execute(
         self,
@@ -62,7 +95,7 @@ class ParallelTaskExecutor:
 
                 futures.append(
                     executor.submit(
-                        self.task_executor.execute,
+                        self._execute_with_context,
                         step,
                         step_context,
                     )

@@ -1,5 +1,7 @@
 """Individual task executor with error handling."""
 
+from __future__ import annotations
+
 from ..core.types import PipelineContext, PipelineStep
 
 

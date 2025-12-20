@@ -97,6 +97,16 @@ class RichHandlerSettings:
     console: Console | None = None
     """Optional console instance to use (None creates default console)."""
 
+    # Task context options (for parallel execution)
+    show_task_context: bool = True
+    """Whether to show task context in parallel execution."""
+
+    task_context_format: str = "[{task_name}] "
+    """Format template for task context. Available: {step_id}, {task_name}."""
+
+    task_context_style: str = "cyan"
+    """Rich style for task context (e.g., 'cyan', 'bold blue', 'dim')."""
+
     def to_dict(self) -> dict:
         """
         Convert settings to dictionary for RichHandler constructor.
@@ -104,12 +114,20 @@ class RichHandlerSettings:
         Returns:
             Dictionary of settings compatible with RichHandler
         """
+        # Custom fields that should not be passed to RichHandler
+        # These are used by our custom TaskContextFilter
+        exclude_fields = {
+            'show_task_context',
+            'task_context_format',
+            'task_context_style',
+        }
+
         # Convert dataclass to dict, excluding None values for optional
-        # parameters
+        # parameters and our custom task context fields
         result = {}
 
         for field_name, field_value in self.__dict__.items():
-            if field_value is not None:
+            if field_value is not None and field_name not in exclude_fields:
                 result[field_name] = field_value
 
         return result

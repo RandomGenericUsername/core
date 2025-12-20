@@ -1,5 +1,6 @@
 """Base class for RedHat/Fedora package managers."""
 
+import os
 import re
 import subprocess
 from abc import ABC
@@ -124,7 +125,7 @@ class RedHatPackageManagerBase(PackageManager, ABC):
         self,
         command: list[str],
         check: bool = True,
-        timeout: int = 300,
+        timeout: int | None = 300,
         capture_output: bool = True,
     ) -> subprocess.CompletedProcess:
         """
@@ -139,19 +140,27 @@ class RedHatPackageManagerBase(PackageManager, ABC):
         Returns:
             CompletedProcess instance
         """
-        # If command starts with sudo, don't capture to allow password input
-        if command and command[0] == "sudo":
+        # Set TERM=dumb to prevent progress bars and TTY detection
+        # that interfere with output capture
+        env = os.environ.copy()
+        env["TERM"] = "dumb"
+
+        if capture_output:
             return subprocess.run(
                 command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                stdin=subprocess.DEVNULL,
                 text=True,
                 check=check,
                 timeout=timeout,
+                env=env,
             )
         else:
             return subprocess.run(
                 command,
-                capture_output=capture_output,
                 text=True,
                 check=check,
                 timeout=timeout,
+                env=env,
             )

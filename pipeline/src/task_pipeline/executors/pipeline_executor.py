@@ -1,5 +1,7 @@
 """Main pipeline executor for orchestrating step execution."""
 
+from __future__ import annotations
+
 from ..core.types import (
     PipelineConfig,
     PipelineContext,

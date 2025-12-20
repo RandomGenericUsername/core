@@ -4,6 +4,7 @@ import logging as stdlib_logging
 import rich_logging
 
 from ..core.log_types import ConsoleHandlers
+from ..filters.task_context_filter import TaskContextFilter
 from ..rich.rich_console_manager import console_manager
 from .base import BaseHandlerConfig, HandlerFactory
 from .rich_settings import RichHandlerSettings
@@ -79,6 +80,16 @@ class RichHandlerConfig(BaseHandlerConfig):
                 console_manager.register_console(
                     self.logger_name, handler.console
                 )
+
+            # Add task context filter if enabled
+            if self.settings.show_task_context:
+                task_filter = TaskContextFilter(
+                    enabled=True,
+                    format_template=self.settings.task_context_format,
+                    use_rich_markup=True,
+                    task_style=self.settings.task_context_style,
+                )
+                handler.addFilter(task_filter)
         else:
             # Graceful fallback to standard handler
             handler = stdlib_logging.StreamHandler()

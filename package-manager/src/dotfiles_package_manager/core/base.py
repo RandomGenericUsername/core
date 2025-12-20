@@ -1,5 +1,6 @@
 """Base package manager interface and exceptions."""
 
+import os
 import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -169,13 +170,32 @@ class PackageManager(ABC):
             PackageManagerError: If command fails and check=True
         """
         try:
-            result = subprocess.run(
-                command,
-                capture_output=capture_output,
-                text=True,
-                check=check,
-                timeout=timeout,
-            )
+            # Use explicit PIPE instead of capture_output to ensure
+            # output is captured even with sudo/TTY scenarios.
+            # Set TERM=dumb to prevent progress bars and TTY detection
+            # that interfere with output capture.
+            env = os.environ.copy()
+            env["TERM"] = "dumb"
+
+            if capture_output:
+                result = subprocess.run(
+                    command,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    stdin=subprocess.DEVNULL,
+                    text=True,
+                    check=check,
+                    timeout=timeout,
+                    env=env,
+                )
+            else:
+                result = subprocess.run(
+                    command,
+                    text=True,
+                    check=check,
+                    timeout=timeout,
+                    env=env,
+                )
             return result
         except subprocess.TimeoutExpired as e:
             raise PackageManagerError(
