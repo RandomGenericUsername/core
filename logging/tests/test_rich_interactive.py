@@ -1,5 +1,6 @@
 """Tests for Rich interactive features (prompts, live updates)."""
 
+import logging
 import rich_logging
 import unittest
 from unittest.mock import Mock, patch
@@ -18,9 +19,9 @@ class TestRichInteractiveFeatures(unittest.TestCase):
         self.rich_settings = RichFeatureSettings()
         self.rich_logger = RichLogger(self.mock_logger, self.rich_settings)
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
-    @patch("logging.rich.rich_logger.Prompt")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.Prompt")
     def test_prompt_with_choices(
         self, mock_prompt_class, mock_console_manager
     ):
@@ -45,9 +46,9 @@ class TestRichInteractiveFeatures(unittest.TestCase):
             console=mock_console,
         )
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
-    @patch("logging.rich.rich_logger.Prompt")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.Prompt")
     def test_prompt_free_text(self, mock_prompt_class, mock_console_manager):
         """Test prompt functionality with free text input."""
         mock_console = Mock()
@@ -64,15 +65,15 @@ class TestRichInteractiveFeatures(unittest.TestCase):
             console=mock_console,
         )
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", False)
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", False)
     def test_prompt_fallback_when_rich_unavailable(self):
         """Test prompt fallback when Rich is not available."""
         result = self.rich_logger.prompt("Test question", default="fallback")
         self.assertEqual(result, "fallback")
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
-    @patch("logging.rich.rich_logger.Confirm")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.Confirm")
     def test_confirm_functionality(
         self, mock_confirm_class, mock_console_manager
     ):
@@ -90,15 +91,15 @@ class TestRichInteractiveFeatures(unittest.TestCase):
             "Do you want to continue?", default=False, console=mock_console
         )
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", False)
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", False)
     def test_confirm_fallback_when_rich_unavailable(self):
         """Test confirm fallback when Rich is not available."""
         result = self.rich_logger.confirm("Test question", default=True)
         self.assertTrue(result)
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
-    @patch("logging.rich.rich_logger.Live")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.Live")
     def test_live_context_manager(self, mock_live_class, mock_console_manager):
         """Test live updates context manager."""
         mock_console = Mock()
@@ -127,15 +128,15 @@ class TestRichInteractiveFeatures(unittest.TestCase):
             auto_refresh=True,  # From settings
         )
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", False)
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", False)
     def test_live_fallback_when_rich_unavailable(self):
         """Test live updates fallback when Rich is not available."""
         with self.rich_logger.live("test") as live:
             self.assertIsNone(live)
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
-    @patch("logging.rich.rich_logger.rich_inspect")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.rich_inspect")
     def test_inspect_functionality(self, mock_inspect, mock_console_manager):
         """Test object inspection functionality."""
         mock_console = Mock()
@@ -155,8 +156,8 @@ class TestRichInteractiveFeatures(unittest.TestCase):
             sort=True,  # From settings
         )
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
     def test_pretty_print_functionality(self, mock_console_manager):
         """Test pretty print functionality."""
         mock_console = Mock()
@@ -169,7 +170,7 @@ class TestRichInteractiveFeatures(unittest.TestCase):
 
     def test_rich_unavailable_fallbacks(self):
         """Test all methods handle Rich unavailable gracefully."""
-        with patch("logging.rich.rich_logger.RICH_AVAILABLE", False):
+        with patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", False):
             # These should all complete without errors
             self.rich_logger.tree({"test": "data"})
             self.rich_logger.columns("col1", "col2")
@@ -204,16 +205,16 @@ class TestRichInteractiveFeatures(unittest.TestCase):
         rich_logger = RichLogger(self.mock_logger, custom_settings)
 
         with (
-            patch("logging.rich.rich_logger.RICH_AVAILABLE", True),
+            patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True),
             patch(
-                "logging.rich.rich_logger.console_manager"
+                "rich_logging.rich.rich_logger.console_manager"
             ) as mock_console_manager,
         ):
             mock_console = Mock()
             mock_console_manager.get_console.return_value = mock_console
 
             with patch(
-                "logging.rich.rich_logger.Prompt"
+                "rich_logging.rich.rich_logger.Prompt"
             ) as mock_prompt:
                 mock_prompt.ask.return_value = "test"
 
@@ -227,9 +228,9 @@ class TestRichInteractiveFeatures(unittest.TestCase):
     def test_empty_data_handling(self):
         """Test handling of empty or invalid data."""
         with (
-            patch("logging.rich.rich_logger.RICH_AVAILABLE", True),
+            patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True),
             patch(
-                "logging.rich.rich_logger.console_manager"
+                "rich_logging.rich.rich_logger.console_manager"
             ) as mock_console_manager,
         ):
             mock_console = Mock()

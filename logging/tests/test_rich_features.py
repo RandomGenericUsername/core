@@ -1,5 +1,6 @@
 """Tests for Rich features in the logging module."""
 
+import logging
 import rich_logging
 import unittest
 from unittest.mock import Mock, patch
@@ -18,8 +19,8 @@ class TestRichFeatures(unittest.TestCase):
         self.rich_settings = RichFeatureSettings()
         self.rich_logger = RichLogger(self.mock_logger, self.rich_settings)
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
     def test_tree_with_dict_data(self, mock_console_manager):
         """Test tree display with dictionary data."""
         mock_console = Mock()
@@ -42,7 +43,7 @@ class TestRichFeatures(unittest.TestCase):
         tree_obj = args[0]
         self.assertEqual(tree_obj.label, "Test Structure")
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", False)
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", False)
     def test_tree_fallback_when_rich_unavailable(self):
         """Test tree graceful fallback when Rich is not available."""
         test_data = {"config/": {"nvim/": "test"}}
@@ -50,8 +51,8 @@ class TestRichFeatures(unittest.TestCase):
         # Should not raise an exception
         self.rich_logger.tree(test_data)
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
     def test_columns_display(self, mock_console_manager):
         """Test columns display functionality."""
         mock_console = Mock()
@@ -65,8 +66,8 @@ class TestRichFeatures(unittest.TestCase):
         # Verify it's a Columns object with correct renderables
         self.assertEqual(len(columns_obj.renderables), 3)
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
     def test_syntax_highlighting(self, mock_console_manager):
         """Test syntax highlighting functionality."""
         mock_console = Mock()
@@ -81,8 +82,8 @@ class TestRichFeatures(unittest.TestCase):
         panel_obj = args[0]
         self.assertEqual(panel_obj.title, "Test Code")
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
     def test_markdown_rendering(self, mock_console_manager):
         """Test markdown rendering functionality."""
         mock_console = Mock()
@@ -93,8 +94,8 @@ class TestRichFeatures(unittest.TestCase):
 
         mock_console.print.assert_called_once()
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
     def test_json_display_with_dict(self, mock_console_manager):
         """Test JSON display with dictionary data."""
         mock_console = Mock()
@@ -109,8 +110,8 @@ class TestRichFeatures(unittest.TestCase):
         panel_obj = args[0]
         self.assertEqual(panel_obj.title, "Test JSON")
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
     def test_json_display_with_string(self, mock_console_manager):
         """Test JSON display with JSON string."""
         mock_console = Mock()
@@ -121,8 +122,8 @@ class TestRichFeatures(unittest.TestCase):
 
         mock_console.print.assert_called_once()
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
     def test_bar_chart_display(self, mock_console_manager):
         """Test bar chart display functionality."""
         mock_console = Mock()
@@ -141,8 +142,8 @@ class TestRichFeatures(unittest.TestCase):
         table_obj = args[0]
         self.assertEqual(table_obj.title, "Test Chart")
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
     def test_text_styling(self, mock_console_manager):
         """Test text styling functionality."""
         mock_console = Mock()
@@ -154,8 +155,8 @@ class TestRichFeatures(unittest.TestCase):
 
         mock_console.print.assert_called_once()
 
-    @patch("logging.rich.rich_logger.RICH_AVAILABLE", True)
-    @patch("logging.rich.rich_logger.console_manager")
+    @patch("rich_logging.rich.rich_logger.RICH_AVAILABLE", True)
+    @patch("rich_logging.rich.rich_logger.console_manager")
     def test_align_functionality(self, mock_console_manager):
         """Test content alignment functionality."""
         mock_console = Mock()
