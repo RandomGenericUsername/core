@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from pipeline import (
+from task_pipeline import (
     LogicOperator,
     ParallelConfig,
     PipelineConfig,
@@ -41,12 +41,14 @@ def mock_app_config():
 
 @pytest.fixture
 def mock_logger():
-    """Provide a mock logger instance."""
+    """Provide a robust mock logger instance with full RichLogger interface."""
     logger = MagicMock()
     logger.info = MagicMock()
     logger.error = MagicMock()
     logger.warning = MagicMock()
     logger.debug = MagicMock()
+    logger.set_task_context = MagicMock()
+    logger.clear_task_context = MagicMock()
     return logger
 
 

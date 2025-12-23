@@ -2,7 +2,7 @@
 
 import pytest
 
-from pipeline import (
+from task_pipeline import (
     LogicOperator,
     ParallelConfig,
     Pipeline,
@@ -127,7 +127,7 @@ class TestPipelineSerialExecution:
         # Arrange
         from typing import Any
 
-        from pipeline import PipelineContext, PipelineStep
+        from task_pipeline import PipelineContext, PipelineStep
 
         class AppendStep(PipelineStep):
             def __init__(self, step_id: str, value: str):
@@ -429,7 +429,7 @@ class TestPipelineRealWorldScenarios:
         # Arrange
         from typing import Any
 
-        from pipeline import PipelineContext, PipelineStep
+        from task_pipeline import PipelineContext, PipelineStep
 
         class LoadDataStep(PipelineStep):
             @property
@@ -513,7 +513,7 @@ class TestPipelineRealWorldScenarios:
         # Arrange
         from typing import Any
 
-        from pipeline import PipelineContext, PipelineStep
+        from task_pipeline import PipelineContext, PipelineStep
 
         class ValidateStep(PipelineStep):
             @property

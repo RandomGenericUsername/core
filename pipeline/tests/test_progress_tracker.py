@@ -3,7 +3,7 @@
 import threading
 from typing import Any
 
-from pipeline import PipelineStep
+from task_pipeline import PipelineStep
 from task_pipeline.core.types import ProgressTracker
 
 

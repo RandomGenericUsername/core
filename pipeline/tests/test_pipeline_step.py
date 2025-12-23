@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from pipeline import PipelineContext, PipelineStep
+from task_pipeline import PipelineContext, PipelineStep
 
 
 class TestPipelineStepInterface:

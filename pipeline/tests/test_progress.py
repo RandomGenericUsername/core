@@ -3,7 +3,7 @@
 import time
 from typing import Any
 
-from pipeline import Pipeline, PipelineContext, PipelineStep
+from task_pipeline import Pipeline, PipelineContext, PipelineStep
 
 
 class SimpleStep(PipelineStep):

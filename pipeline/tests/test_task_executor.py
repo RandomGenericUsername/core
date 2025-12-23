@@ -2,7 +2,7 @@
 
 import pytest
 
-from pipeline import TaskExecutor
+from task_pipeline import TaskExecutor
 
 
 class TestTaskExecutorBasics:
@@ -77,7 +77,7 @@ class TestTaskExecutorExecution:
         # Arrange
         from typing import Any
 
-        from pipeline import PipelineContext, PipelineStep
+        from task_pipeline import PipelineContext, PipelineStep
 
         class ModifyStep(PipelineStep):
             @property
@@ -110,7 +110,7 @@ class TestTaskExecutorExecution:
         # Arrange
         from typing import Any
 
-        from pipeline import PipelineContext, PipelineStep
+        from task_pipeline import PipelineContext, PipelineStep
 
         class LoggingStep(PipelineStep):
             @property
@@ -256,7 +256,7 @@ class TestTaskExecutorErrorHandling:
         # Arrange
         from dataclasses import dataclass
 
-        from pipeline import PipelineContext
+        from task_pipeline import PipelineContext
 
         # Create context without errors attribute by using a custom class
         @dataclass
@@ -289,7 +289,7 @@ class TestTaskExecutorEdgeCases:
         # Arrange
         from typing import Any
 
-        from pipeline import PipelineContext, PipelineStep
+        from task_pipeline import PipelineContext, PipelineStep
 
         class NewContextStep(PipelineStep):
             @property
@@ -326,7 +326,7 @@ class TestTaskExecutorEdgeCases:
     ):
         """Test executing step with empty context."""
         # Arrange
-        from pipeline import PipelineContext
+        from task_pipeline import PipelineContext
 
         from .conftest import SimpleStep
 

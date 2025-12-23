@@ -5,7 +5,7 @@ from concurrent.futures import TimeoutError
 
 import pytest
 
-from pipeline import (
+from task_pipeline import (
     LogicOperator,
     ParallelConfig,
     ParallelTaskExecutor,
@@ -36,7 +36,7 @@ class TestParallelExecutorBasics:
     def test_executor_with_custom_task_executor(self):
         """Test creating executor with custom task executor."""
         # Arrange
-        from pipeline import TaskExecutor
+        from task_pipeline import TaskExecutor
 
         custom_task_executor = TaskExecutor()
 
@@ -208,7 +208,7 @@ class TestParallelExecutorContextMerging:
         # Arrange
         from typing import Any
 
-        from pipeline import PipelineContext, PipelineStep
+        from task_pipeline import PipelineContext, PipelineStep
 
         class IsolationTestStep(PipelineStep):
             def __init__(self, step_id: str):

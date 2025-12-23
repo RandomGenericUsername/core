@@ -2,7 +2,7 @@
 
 import copy
 
-from pipeline import PipelineContext, PipelineStep
+from task_pipeline import PipelineContext, PipelineStep
 from task_pipeline.core.types import ProgressTracker
 
 
