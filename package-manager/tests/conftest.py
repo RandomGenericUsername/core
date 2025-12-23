@@ -244,6 +244,23 @@ def mock_detect_distribution():
         yield mock_detect
 
 
+@pytest.fixture
+def mock_path_exists():
+    """Mock Path.exists() to always return True."""
+    with patch("pathlib.Path.exists", return_value=True) as mock_exists:
+        yield mock_exists
+
+
+@pytest.fixture
+def mock_executable_path():
+    """Create a mock Path object for executable."""
+    mock_path = Mock(spec=Path)
+    mock_path.exists.return_value = True
+    mock_path.__str__.return_value = "/usr/bin/mock"
+    mock_path.__truediv__ = lambda self, other: mock_path
+    return mock_path
+
+
 # Helper classes for testing
 
 
