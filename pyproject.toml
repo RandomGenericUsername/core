@@ -1,5 +1,5 @@
 [tool.uv.workspace]
-members = ["logging", "pipeline", "package-manager"]
+members = ["packages/*"]
 
 [tool.uv]
 dev-dependencies = [
@@ -13,3 +13,12 @@ dev-dependencies = [
     "pre-commit>=3.8.0",
 ]
 
+
+[tool.pytest.ini_options]
+addopts = ["--import-mode=importlib"]
+pythonpath = [
+    "packages/logging/src",
+    "packages/pipeline/src",
+    "packages/package-manager/src",
+    "packages/container-manager/src",
+]

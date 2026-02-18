@@ -4,6 +4,7 @@ requires-python = ">=3.12"
 
 [manifest]
 members = [
+    "container-manager",
     "dotfiles-package-manager",
     "rich-logging",
     "task-pipeline",
@@ -81,6 +82,37 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44", size = 27697, upload-time = "2022-10-25T02:36:22.414Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6", size = 25335, upload-time = "2022-10-25T02:36:20.889Z" },
+]
+
+[[package]]
+name = "container-manager"
+version = "0.1.0"
+source = { editable = "packages/container-manager" }
+
+[package.dev-dependencies]
+dev = [
+    { name = "black" },
+    { name = "isort" },
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "pytest-xdist" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "black", specifier = ">=24.0.0" },
+    { name = "isort", specifier = ">=5.13.0" },
+    { name = "mypy", specifier = ">=1.11.0" },
+    { name = "pre-commit", specifier = ">=3.8.0" },
+    { name = "pytest", specifier = ">=8.4.2" },
+    { name = "pytest-cov", specifier = ">=4.1.0" },
+    { name = "pytest-xdist", specifier = ">=3.8.0" },
+    { name = "ruff", specifier = ">=0.6.0" },
 ]
 
 [[package]]
@@ -169,7 +201,7 @@ wheels = [
 [[package]]
 name = "dotfiles-package-manager"
 version = "0.2.0"
-source = { editable = "package-manager" }
+source = { editable = "packages/package-manager" }
 
 [package.optional-dependencies]
 dev = [
@@ -538,7 +570,7 @@ wheels = [
 [[package]]
 name = "rich-logging"
 version = "0.1.0"
-source = { editable = "logging" }
+source = { editable = "packages/logging" }
 dependencies = [
     { name = "rich" },
 ]
@@ -596,7 +628,7 @@ wheels = [
 [[package]]
 name = "task-pipeline"
 version = "0.1.0"
-source = { editable = "pipeline" }
+source = { editable = "packages/pipeline" }
 dependencies = [
     { name = "rich-logging" },
 ]
@@ -620,7 +652,7 @@ requires-dist = [
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.8.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
-    { name = "rich-logging", editable = "logging" },
+    { name = "rich-logging", editable = "packages/logging" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.1.0" },
 ]
 provides-extras = ["dev"]
