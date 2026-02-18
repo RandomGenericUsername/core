@@ -19,8 +19,7 @@ sync: ## Sync entire workspace (installs all packages into shared .venv)
 	@uv sync
 	@echo "✅ Workspace sync complete"
 
-install: ## Alias for sync
-	@$(MAKE) sync
+install: sync ## Alias for sync
 
 dev-shell: ## Activate the shared workspace virtual environment
 	@echo "Activating virtual environment..."
@@ -96,6 +95,8 @@ clean: ## Clean cache files and build artifacts across all packages
 	@find . -maxdepth 1 -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
 	@find . -maxdepth 1 -type d -name ".mypy_cache" -exec rm -rf {} + 2>/dev/null || true
 	@find . -maxdepth 1 -type d -name ".ruff_cache" -exec rm -rf {} + 2>/dev/null || true
+	@find . -maxdepth 1 -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
+	@rm -rf build/ dist/ htmlcov/ .coverage 2>/dev/null || true
 	@echo "✅ Cleanup complete"
 
 clean-venv: ## Remove the shared workspace virtual environment
